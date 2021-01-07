@@ -1,0 +1,44 @@
+import numpy as np
+import pandas as pd
+
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.metrics import r2_score
+
+import matplotlib.pyplot as plt
+import math
+
+fib_data = pd.read_csv("Infosys.csv")
+# the csv file contains all the values of Infosys's Annual Revenue for each year
+
+x = fib_data["No. of Employees"][:15].values.reshape(-1, 1)
+y1 = fib_data["Expenses (millions of USD)"][:15].values.reshape(-1, 1)
+print(x)
+print(y1)
+
+model_lin = LinearRegression() # creating the model on which the regression will take place
+best_fit_lin = model_lin.fit(x, y1) # finds the line of best fit for the points
+pred_lin = model_lin.predict(x) # predicted y-coordinates for the x-coordinates
+slope_lin = best_fit_lin.coef_ # gives us the slope of the line of best fit
+intercept_lin = best_fit_lin.intercept_ # gives us the y-intercept
+
+model_poly = LinearRegression(fit_intercept=False)
+poly = PolynomialFeatures(degree = 3) # we have also chosen to fit the data to a third-degree polynomial
+x_poly = poly.fit_transform(x)
+best_fit_poly = model_poly.fit(x_poly, y1)
+pred_poly = model_poly.predict(x_poly)
+coefficients_poly = best_fit_poly.coef_ # the coefficients of each term in the polynomial
+
+print("Slope:", slope_lin)
+print("Intercept:", intercept_lin)
+print("Poly coefficients:", coefficients_poly)
+print("r2 score line:", r2_score(y1, pred_lin)) # the r2 score is how close the line of best fit matches the actual data points
+print("r2 score poly:", r2_score(y1, pred_poly)) # here it shows how close the polynomial of best fit mathces the actual data
+
+# the labels for the graph
+plt.plot(x, y1, "ro", x, pred_lin, "b", x, pred_poly, "g")
+plt.title("Regression Analysis of Budget")
+plt.xlabel("No. of Employees")
+plt.ylabel("Budget")
+plt.legend(["Budget", "Best Fit Line", "Best Fit Cubic Polynomial"])
+plt.show()
