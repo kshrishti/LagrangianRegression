@@ -1,0 +1,19 @@
+import pandas as pd
+from sklearn import linear_model
+import statsmodels.api as sm
+
+Infosys = {'Year': [2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020],
+                'Revenue': [2152.00,3090.00,4176.00,4663.00,4804.00, 6041.00,6994.00,7398.00,8249.00,8711.00,9501.00,10208.00,10939.00,11799.00,12780.00],
+                'Employees': [36800,52700,72200,91200,113796,130820,149994,156688,160405,176187,194044,200364,204107,228123,242371],
+                }
+
+df = pd.DataFrame(Infosys,columns=['Year','Employees','Revenue'])
+
+X = df[['Year','Employees']]
+Y = df['Revenue']
+
+regr = linear_model.LinearRegression()
+regr.fit(X, Y)
+
+print('Intercept: \n', regr.intercept_)
+print('Coefficients: \n', regr.coef_)
